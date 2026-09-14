@@ -20,10 +20,6 @@ The pipeline implements:
 
 This repository is intentionally restricted to **grain yield (`GY`)**.
 
-- No real phenotypic or genomic datasets are included.
-- The analysis imports only `ENV`, `GEN`, `REP`, and `GY`.
-- Raw inputs and generated results are excluded by `.gitignore`.
-
 ## Required input files
 
 Place these files beside the R script, or edit `POP_FILES`:
