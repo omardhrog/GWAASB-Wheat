@@ -1,0 +1,10 @@
+cff-version: 1.2.0
+message: "If you use this workflow, please cite the associated article when its final citation becomes available."
+title: "GWAASB-Wheat: Genomic prediction and stability analysis for grain yield"
+type: software
+authors:
+  - family-names: "Dharog"
+    given-names: "Omar"
+repository-code: "https://github.com/omardhrog/GWAASB-Wheat"
+version: 0.1.0
+date-released: 2026-09-14
