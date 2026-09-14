@@ -1,6 +1,6 @@
 # GWAASB-Wheat
 
-A reproducible **grain-yield-only (`GY`)** workflow for integrating genomic prediction and stability analysis in multi-environment wheat trials.
+A reproducible **grain-yield(`GY`)** workflow for integrating genomic prediction and stability analysis in multi-environment wheat trials.
 
 ## Scope
 
