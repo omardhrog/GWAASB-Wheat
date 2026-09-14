@@ -1,0 +1,28 @@
+# Confidential study inputs
+phenotype_data_*.csv
+SNP_clean*.csv
+data/raw/
+data/private/
+
+# Generated analysis outputs
+results/
+GS_revision_essential/
+Revision_outputs/
+
+# R session and local project files
+.Rhistory
+.RData
+.Ruserdata
+.Rproj.user/
+*.Rproj
+
+# Serialized objects and spreadsheets
+*.rds
+*.RDS
+*.rda
+*.RData
+*.xlsx
+
+# OS/editor files
+.DS_Store
+Thumbs.db
