@@ -22,7 +22,6 @@ This repository is intentionally restricted to **grain yield (`GY`)**.
 
 - No real phenotypic or genomic datasets are included.
 - The analysis imports only `ENV`, `GEN`, `REP`, and `GY`.
-- Every column outside that approved schema is discarded immediately after import.
 - Raw inputs and generated results are excluded by `.gitignore`.
 
 ## Required input files
