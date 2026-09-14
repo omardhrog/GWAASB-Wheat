@@ -18,7 +18,7 @@ The pipeline implements:
 
 ## Privacy boundary
 
-This repository is intentionally restricted to **one phenotype: grain yield (`GY`)**.
+This repository is intentionally restricted to **grain yield (`GY`)**.
 
 - No real phenotypic or genomic datasets are included.
 - The analysis imports only `ENV`, `GEN`, `REP`, and `GY`.
