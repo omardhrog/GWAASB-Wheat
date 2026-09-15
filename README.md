@@ -44,11 +44,3 @@ The default analysis uses two populations, excludes parents `G101` and `G102`, r
 ## Outputs
 
 All generated files are written to `results/`, including marker-QC summaries, environment BLUEs, genomic predictions, GWAASB values, stability comparisons, CV summaries, environment-specific metrics, validation predictions, and session information.
-
-## Reproducibility note
-
-Cross-validation partitions are created before phenotype adjustment. Validation observations are adjusted using training-derived replicate effects, and the same partitions are used for GBLUP and GBLUP-G×E within each repetition.
-
-## Status
-
-Research code associated with the GWAASB wheat analysis. The repository is currently private and contains no study data.
