@@ -26,10 +26,10 @@ Place these files beside the R script, or edit `POP_FILES`:
 
 | File | Required structure |
 | --- | --- |
-| `phenotype_data_h3.csv` | `ENV, GEN, REP, GY` |
-| `phenotype_data_h4.csv` | `ENV, GEN, REP, GY` |
-| `SNP_clean_fixed_h3.csv` | `GEN` followed by SNP-marker columns |
-| `SNP_clean_fixed_h4.csv` | `GEN` followed by SNP-marker columns |
+| `phenotype_data_DHLS-1.csv` | `ENV, GEN, REP, GY` |
+| `phenotype_data_DHLS-2.csv` | `ENV, GEN, REP, GY` |
+| `SNP_clean_fixed_DHLS-1.csv` | `GEN` followed by SNP-marker columns |
+| `SNP_clean_fixed_DHLS-2.csv` | `GEN` followed by SNP-marker columns |
 
 SNP genotypes may be coded as `0/1/2` or `-1/0/1`. Missing marker values are mean-imputed when the genomic relationship matrix is constructed.
 
