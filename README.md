@@ -22,7 +22,7 @@ This repository is intentionally restricted to **grain yield (`GY`)**.
 
 ## Required input files
 
-Place these files beside the R script, or edit `POP_FILES`:
+Place these files in the R working directory (normally the repository root), or edit `POP_FILES`:
 
 | File | Required structure |
 | --- | --- |
