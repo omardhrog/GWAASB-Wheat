@@ -59,14 +59,14 @@ options(stringsAsFactors = FALSE)
 TRAIT <- "GY"
 
 POP_FILES <- list(
-  H3 = list(
-    pheno = "phenotype_data_h3.csv",
-    geno  = "SNP_clean_fixed_h3.csv",
+  `DHLS-1` = list(
+    pheno = "phenotype_data_DHLS-1.csv",
+    geno  = "SNP_clean_fixed_DHLS-1.csv",
     parents = c("G101", "G102")
   ),
-  H4 = list(
-    pheno = "phenotype_data_h4.csv",
-    geno  = "SNP_clean_fixed_h4.csv",
+  `DHLS-2` = list(
+    pheno = "phenotype_data_DHLS-2.csv",
+    geno  = "SNP_clean_fixed_DHLS-2.csv",
     parents = c("G101", "G102")
   )
 )
