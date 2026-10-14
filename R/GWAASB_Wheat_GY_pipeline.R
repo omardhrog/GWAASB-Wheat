@@ -301,6 +301,29 @@ marker_qc <- function(M, pop) {
 
 
 ################################################################################
+# EXPERIMENTAL DESIGN AND STAGE-ONE ESTIMAND (DOCUMENTATION ONLY)
+################################################################################
+# Original field design: balanced split-plot within each YEAR x LOCATION;
+# sowing date (DATE) is the whole-plot factor, and genotype (GEN) is the
+# subplot factor, with three replications (REP).
+#
+# Conceptual full split-plot model within a YEAR x LOCATION combination:
+# Y_rdg = mu + R_r + D_d + (R:D)_rd + G_g + (D:G)_dg + e_rdg
+#
+# (R:D)_rd denotes whole-plot error; e_rdg is subplot residual error.
+# Environment-specific genotype adjusted means are the G-within-D estimates.
+#
+# IMPORTANT: the executable code immediately below estimates BLUEs with
+# lm(GY ~ REP + GEN) separately in each ENV (= YEAR x LOCATION x DATE).
+# The above equation documents the ORIGINAL DESIGN, not an additional
+# mixed-model fit performed by this script. With complete balance, point
+# estimates can coincide, but SEs and error strata are not interchangeable.
+# CV1/CV2 retain training-only phenotype adjustment as implemented below.
+# No computational results or model-fitting calls are changed here.
+################################################################################
+
+
+################################################################################
 # 7. FULL-DATA ENVIRONMENT BLUEs
 ################################################################################
 
