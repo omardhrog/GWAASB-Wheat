@@ -30,6 +30,7 @@ pkgs <- c(
   "rrBLUP",
   "BGLR",
   "emmeans",
+  "lme4",
   "metan"
 )
 
@@ -47,6 +48,7 @@ suppressPackageStartupMessages({
   library(rrBLUP)
   library(BGLR)
   library(emmeans)
+  library(lme4)
   library(metan)
 })
 
@@ -71,6 +73,8 @@ POP_FILES <- list(
   )
 )
 
+# Select full-data BLUE estimator. CV remains training-only as before.
+STAGE1_FULL_METHOD <- "within_env" # or "splitplot"
 EXPECTED_DH <- 100
 
 N_FOLDS <- 5
@@ -301,6 +305,29 @@ marker_qc <- function(M, pop) {
 
 
 ################################################################################
+# EXPERIMENTAL DESIGN AND STAGE-ONE ESTIMAND (DOCUMENTATION ONLY)
+################################################################################
+# Original field design: balanced split-plot within each YEAR x LOCATION;
+# sowing date (DATE) is the whole-plot factor, and genotype (GEN) is the
+# subplot factor, with three replications (REP).
+#
+# Conceptual full split-plot model within a YEAR x LOCATION combination:
+# Y_rdg = mu + R_r + D_d + (R:D)_rd + G_g + (D:G)_dg + e_rdg
+#
+# (R:D)_rd denotes whole-plot error; e_rdg is subplot residual error.
+# Environment-specific genotype adjusted means are the G-within-D estimates.
+#
+# IMPORTANT: the executable code immediately below estimates BLUEs with
+# lm(GY ~ REP + GEN) separately in each ENV (= YEAR x LOCATION x DATE).
+# The above equation documents the ORIGINAL DESIGN, not an additional
+# mixed-model fit performed by this script. With complete balance, point
+# estimates can coincide, but SEs and error strata are not interchangeable.
+# CV1/CV2 retain training-only phenotype adjustment as implemented below.
+# No computational results or model-fitting calls are changed here.
+################################################################################
+
+
+################################################################################
 # 7. FULL-DATA ENVIRONMENT BLUEs
 ################################################################################
 
@@ -328,6 +355,55 @@ stage1_full <- function(pheno) {
       )
     }) %>%
     arrange(ENV, GEN)
+}
+
+
+################################################################################
+# 7A. EXECUTABLE SPLIT-PLOT STAGE 1 (FULL DATA ONLY)
+################################################################################
+# ENV naming convention: year1.D1.loc01, year1.D2.loc01, etc.
+# Within YEAR x LOCATION, DATE is the whole-plot factor, GEN subplot.
+# REP:DATE is the whole-plot random error; residual is subplot error.
+# This option does not change the training-only CV stage-one procedure.
+stage1_splitplot <- function(pheno) {
+  key <- as.character(pheno$ENV)
+  m <- regexec("^(year[^.]+)\\.(D[^.]+)\\.(loc[^.]+)$", key)
+  parts <- regmatches(key, m)
+  if (any(lengths(parts) != 4L)) {
+    stop("Split-plot requires ENV labels like year1.D1.loc01.")
+  }
+  ph <- pheno
+  ph$YEAR <- vapply(parts, `[`, character(1), 2)
+  ph$DATE <- vapply(parts, `[`, character(1), 3)
+  ph$LOCATION <- vapply(parts, `[`, character(1), 4)
+  groups <- split(ph, interaction(ph$YEAR, ph$LOCATION, drop = TRUE))
+  out <- lapply(groups, function(d) {
+    d <- droplevels(d)
+    d$DATE <- factor(d$DATE)
+    d$REP <- factor(d$REP)
+    d$GEN <- factor(d$GEN)
+    if (nlevels(d$DATE) < 2L || nlevels(d$REP) < 2L) {
+      stop("Need at least two dates and two replicates per year/location.")
+    }
+    fit <- lme4::lmer(
+      GY ~ REP + DATE * GEN + (1 | REP:DATE),
+      data = d, REML = TRUE
+    )
+    em <- as.data.frame(emmeans::emmeans(fit, ~ GEN | DATE))
+    lookup <- unique(data.frame(
+      DATE = as.character(d$DATE), ENV = as.character(d$ENV)
+    ))
+    ans <- merge(em[, c("DATE", "GEN", "emmean", "SE")],
+                 lookup, by = "DATE", all.x = TRUE, sort = FALSE)
+    if (anyNA(ans$ENV) || anyNA(ans$emmean) || anyNA(ans$SE)) {
+      stop("Missing or non-estimable split-plot adjusted means.")
+    }
+    tibble::tibble(ENV = as.character(ans$ENV),
+                   GEN = as.character(ans$GEN),
+                   BLUE = as.numeric(ans$emmean),
+                   BLUE_SE = as.numeric(ans$SE))
+  })
+  dplyr::arrange(dplyr::bind_rows(out), ENV, GEN)
 }
 
 
@@ -1639,8 +1715,11 @@ run_population <- function(
     ": full-data BLUEs..."
   )
 
-  full_blues <- stage1_full(
-    pheno
+  full_blues <- switch(
+    STAGE1_FULL_METHOD,
+    within_env = stage1_full(pheno),
+    splitplot = stage1_splitplot(pheno),
+    stop("Unknown STAGE1_FULL_METHOD: ", STAGE1_FULL_METHOD)
   )
 
   message(
