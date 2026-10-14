@@ -74,7 +74,7 @@ POP_FILES <- list(
 )
 
 # Select full-data BLUE estimator. CV remains training-only as before.
-STAGE1_FULL_METHOD <- "within_env" # or "splitplot"
+STAGE1_FULL_METHOD <- "splitplot" # or "within_env" (legacy within-ENV model)
 EXPECTED_DH <- 100
 
 N_FOLDS <- 5
@@ -364,7 +364,7 @@ stage1_full <- function(pheno) {
 # ENV naming convention: year1.D1.loc01, year1.D2.loc01, etc.
 # Within YEAR x LOCATION, DATE is the whole-plot factor, GEN subplot.
 # REP:DATE is the whole-plot random error; residual is subplot error.
-# This option does not change the training-only CV stage-one procedure.
+# NOTE: CV1/CV2 still use training-only lm(GY ~ REP + GEN) within ENV.\n# They do NOT refit the full split-plot model in every fold.\n# This difference must be disclosed; do not claim otherwise.
 stage1_splitplot <- function(pheno) {
   key <- as.character(pheno$ENV)
   m <- regexec("^(year[^.]+)\\.(D[^.]+)\\.(loc[^.]+)$", key)
